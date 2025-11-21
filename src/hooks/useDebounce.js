@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 
 /**
  * Custom hook for debouncing values
@@ -32,6 +32,11 @@ export const useDebounce = (value, delay = 300) => {
 export const useDebouncedCallback = (callback, delay = 300, deps = []) => {
   const [debounceTimer, setDebounceTimer] = useState(null);
 
+  const dependencyList = useMemo(
+    () => [callback, delay, debounceTimer, ...deps],
+    [callback, delay, debounceTimer, deps]
+  );
+
   const debouncedCallback = useCallback((...args) => {
     if (debounceTimer) {
       clearTimeout(debounceTimer);
@@ -42,7 +47,7 @@ export const useDebouncedCallback = (callback, delay = 300, deps = []) => {
     }, delay);
 
     setDebounceTimer(newTimer);
-  }, [callback, delay, debounceTimer, ...deps]);
+  }, dependencyList);
 
   useEffect(() => {
     return () => {
