@@ -27,14 +27,19 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
+  const normalizeEmail = (value = '') => value.trim().toLowerCase();
+  const normalizeString = (value = '') => value.trim();
+
   const login = (email, password, admin = false) => {
     // In a real app, this would be an API call
     // For demo, we'll use hardcoded credentials
     const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const normalizedEmail = normalizeEmail(email || '');
+    const normalizedPassword = normalizeString(password || '');
     
     if (admin) {
       // Admin login (hardcoded for demo)
-      if (email === 'admin@gmail.com' && password === 'admin123') {
+      if (normalizedEmail === 'admin@gmail.com' && normalizedPassword === 'admin123') {
         const adminUser = {
           id: 'admin',
           email: 'admin@gmail.com',
@@ -50,7 +55,10 @@ export const AuthProvider = ({ children }) => {
       return { success: false, error: 'Invalid admin credentials' };
     } else {
       // User login
-      const user = users.find(u => u.email === email && u.password === password);
+      const user = users.find(u => 
+        normalizeEmail(u.email || '') === normalizedEmail &&
+        normalizeString(u.password || '') === normalizedPassword
+      );
       if (user) {
         const { password, ...userWithoutPassword } = user;
         setCurrentUser(userWithoutPassword);
@@ -65,15 +73,22 @@ export const AuthProvider = ({ children }) => {
 
   const register = (userData) => {
     const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const sanitizedUserData = {
+      ...userData,
+      name: normalizeString(userData.name || ''),
+      email: normalizeEmail(userData.email || ''),
+      phone: normalizeString(userData.phone || ''),
+      password: normalizeString(userData.password || '')
+    };
     
     // Check if email already exists
-    if (users.some(u => u.email === userData.email)) {
+    if (users.some(u => normalizeEmail(u.email || '') === sanitizedUserData.email)) {
       return { success: false, error: 'Email already registered' };
     }
     
     const newUser = {
       id: Date.now().toString(),
-      ...userData,
+      ...sanitizedUserData,
       createdAt: new Date().toISOString()
     };
     
