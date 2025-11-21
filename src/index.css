@@ -1,0 +1,306 @@
+/* 
+ * Tailwind CSS directives - @tailwind and @apply warnings are false positives
+ * These directives are required for Tailwind CSS to function properly
+ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-border-light;
+  }
+  
+  body {
+    @apply font-body text-text-secondary antialiased;
+    background: linear-gradient(135deg, #87CEEB 0%, #B0E0F6 50%, #D4F1FF 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display text-text-primary font-bold tracking-tight;
+  }
+  
+  /* Focus styles for accessibility */
+  *:focus {
+    @apply outline-none;
+  }
+  
+  *:focus-visible {
+    @apply ring-2 ring-brand-primary ring-offset-2 ring-offset-bg-primary;
+  }
+}
+
+@layer components {
+  /* Enhanced button components with rounded sky blue design */
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-full transition-all duration-300 focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg;
+  }
+  
+  .btn-primary {
+    @apply btn bg-brand-primary text-white hover:bg-brand-primary-dark transform hover:-translate-y-1 hover:scale-105;
+  }
+  
+  .btn-secondary {
+    @apply btn bg-brand-secondary text-white hover:bg-brand-secondary-light shadow-md hover:shadow-lg transform hover:-translate-y-0.5;
+  }
+  
+  .btn-outline {
+    @apply btn bg-transparent border-2 border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white;
+  }
+  
+  .btn-ghost {
+    @apply btn bg-transparent text-text-secondary hover:bg-bg-secondary hover:text-text-primary;
+  }
+  
+  .btn-danger {
+    @apply btn bg-error text-white hover:bg-red-600 shadow-md hover:shadow-lg;
+  }
+  
+  .btn-success {
+    @apply btn bg-success text-white hover:bg-green-600 shadow-md hover:shadow-lg;
+  }
+  
+  .btn-sm {
+    @apply px-3 py-1.5 text-xs;
+  }
+  
+  .btn-lg {
+    @apply px-6 py-3 text-base;
+  }
+  
+  /* Enhanced card components with rounded sky blue glassmorphism */
+  .card {
+    @apply bg-glass-light backdrop-blur-xl rounded-2xl shadow-xl border border-glass p-6 transition-all duration-300 hover:shadow-2xl hover:bg-glass;
+  }
+  
+  .card-hover {
+    @apply card hover:shadow-2xl hover:-translate-y-2 cursor-pointer hover:bg-glass hover:scale-[1.02];
+  }
+  
+  .card-compact {
+    @apply bg-glass-light backdrop-blur-lg rounded-xl shadow-lg border border-glass p-4 transition-all duration-300;
+  }
+  
+  .card-solid {
+    @apply bg-white rounded-xl shadow-md border border-border-light p-6 transition-all duration-250 hover:shadow-lg;
+  }
+  
+  /* Enhanced input components with rounded glassmorphism */
+  .input {
+    @apply w-full px-4 py-3 border-2 border-glass-sky rounded-xl 
+           bg-glass-light backdrop-blur-md text-text-primary
+           placeholder-text-muted
+           shadow-lg
+           transition-all duration-300
+           focus:outline-none focus:ring-4 focus:ring-brand-primary focus:ring-opacity-20
+           focus:border-brand-primary focus:shadow-brand focus:-translate-y-px
+           hover:border-brand-primary hover:shadow-md;
+    /* Persistent glow effect */
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+      0 0 0 1px rgba(14, 165, 233, 0.2),
+      0 0 20px rgba(14, 165, 233, 0.1);
+  }
+
+  .input:focus {
+    /* Enhanced glow on focus */
+    box-shadow: 
+      0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0 4px 6px -2px rgba(0, 0, 0, 0.05),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
+      0 0 0 2px rgba(14, 165, 233, 0.4),
+      0 0 30px rgba(14, 165, 233, 0.3);
+  }
+
+  .input-error {
+    @apply border-error focus:ring-error focus:ring-opacity-20;
+    /* Red glow for error state */
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+      0 0 0 1px rgba(239, 68, 68, 0.3),
+      0 0 20px rgba(239, 68, 68, 0.2);
+  }
+  
+  .input-sm {
+    @apply input px-2 py-1 text-xs;
+  }
+  
+  .input-lg {
+    @apply input px-4 py-3 text-base;
+  }
+  
+  /* Priority badges with rounded styling */
+  .priority-high {
+    @apply bg-error text-white px-3 py-1.5 rounded-full text-xs font-semibold shadow-md backdrop-blur-sm;
+  }
+  
+  .priority-medium {
+    @apply bg-warning text-white px-3 py-1.5 rounded-full text-xs font-semibold shadow-md backdrop-blur-sm;
+  }
+  
+  .priority-low {
+    @apply bg-success text-white px-3 py-1.5 rounded-full text-xs font-semibold shadow-md backdrop-blur-sm;
+  }
+  
+  /* Enhanced badge component */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium;
+  }
+  
+  .badge-primary {
+    @apply badge bg-brand-primary bg-opacity-10 text-brand-primary;
+  }
+  
+  .badge-secondary {
+    @apply badge bg-bg-secondary text-text-secondary;
+  }
+  
+  .badge-success {
+    @apply badge bg-success bg-opacity-10 text-success;
+  }
+  
+  .badge-error {
+    @apply badge bg-error bg-opacity-10 text-error;
+  }
+  
+  /* Task states */
+  .task-complete {
+    @apply opacity-60 line-through text-text-muted;
+  }
+  
+  .task-pending {
+    @apply text-text-primary;
+  }
+  
+  /* Loading states */
+  .loading-skeleton {
+    @apply animate-pulse bg-bg-secondary rounded;
+  }
+  
+  .loading-spinner {
+    @apply animate-spin rounded-full border-2 border-border-light border-t-brand-primary;
+  }
+  
+  /* Status indicators */
+  .status-online {
+    @apply w-2 h-2 bg-success rounded-full;
+  }
+  
+  .status-offline {
+    @apply w-2 h-2 bg-text-muted rounded-full;
+  }
+  
+  .status-busy {
+    @apply w-2 h-2 bg-warning rounded-full;
+  }
+  
+  /* Enhanced form components */
+  .form-group {
+    @apply space-y-2;
+  }
+  
+  .form-label {
+    @apply block text-sm font-medium text-text-primary;
+  }
+  
+  .form-error {
+    @apply text-sm text-error mt-1;
+  }
+  
+  .form-help {
+    @apply text-xs text-text-muted mt-1;
+  }
+  
+  /* Navigation components with rounded glassmorphism */
+  .nav-link {
+    @apply flex items-center px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-300 hover:bg-glass-sky hover:scale-105 hover:shadow-md;
+  }
+  
+  .nav-link-active {
+    @apply nav-link bg-glass-sky backdrop-blur-lg text-brand-primary shadow-lg scale-105;
+  }
+  
+  /* Enhanced modal styles with rounded glassmorphism */
+  .modal-overlay {
+    @apply fixed inset-0 bg-black bg-opacity-40 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-fade-in;
+  }
+  
+  .modal-content {
+    @apply bg-glass-light backdrop-blur-2xl rounded-3xl shadow-2xl border-2 border-glass max-w-md w-full max-h-[90vh] overflow-y-auto animate-scale-in;
+  }
+  
+  .modal-solid {
+    @apply bg-white rounded-3xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto animate-scale-in;
+  }
+  
+  /* Responsive grid utilities */
+  .grid-responsive {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+  }
+  
+  .grid-responsive-2 {
+    @apply grid grid-cols-1 lg:grid-cols-2 gap-6;
+  }
+  
+  /* Enhanced text utilities */
+  .text-gradient {
+    @apply bg-gradient-to-r from-brand-primary to-brand-primary-dark bg-clip-text text-transparent;
+  }
+  
+  .text-shadow {
+    @apply drop-shadow-sm;
+  }
+  
+  /* Enhanced hover states */
+  .hover-lift {
+    @apply transition-transform duration-250 hover:-translate-y-1;
+  }
+  
+  .hover-scale {
+    @apply transition-transform duration-250 hover:scale-105;
+  }
+  
+  .hover-glow {
+    @apply transition-shadow duration-250 hover:shadow-brand;
+  }
+  
+  /* Glassmorphism utilities with rounded corners */
+  .glass {
+    @apply bg-glass backdrop-blur-xl border border-glass rounded-2xl;
+  }
+  
+  .glass-light {
+    @apply bg-glass-light backdrop-blur-xl border border-glass-light rounded-2xl;
+  }
+  
+  .glass-dark {
+    @apply bg-glass-sky backdrop-blur-xl border border-glass-sky rounded-2xl;
+  }
+  
+  .glass-surface {
+    @apply bg-glass-light backdrop-blur-2xl border-2 border-glass rounded-3xl shadow-xl;
+  }
+  
+  .glass-surface-dark {
+    @apply bg-gradient-to-br from-black to-black bg-opacity-10 backdrop-blur-xl border border-white border-opacity-10;
+  }
+  
+  /* Task metrics counters with rounded design */
+  .metric-counter {
+    @apply inline-flex items-center justify-center w-10 h-10 rounded-full bg-glass-sky backdrop-blur-lg border-2 border-glass-sky text-sm font-bold text-brand-primary shadow-lg hover:scale-110 transition-transform duration-300;
+  }
+  
+  .metric-counter-rised {
+    @apply metric-counter bg-success bg-opacity-20 text-success;
+  }
+  
+  .metric-counter-fallen {
+    @apply metric-counter bg-error bg-opacity-20 text-error;
+  }
+}
