@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 /**
  * Custom hook for debouncing values
@@ -24,38 +24,30 @@ export const useDebounce = (value, delay = 300) => {
 
 /**
  * Custom hook for debounced callback
- * @param {Function} callback - The callback to debounce
+ * @param {Function} callback - The callback to debounce (should be memoized by caller)
  * @param {number} delay - The delay in milliseconds
- * @param {Array} deps - Dependency array
  * @returns {Function} - The debounced callback
  */
-export const useDebouncedCallback = (callback, delay = 300, deps = []) => {
-  const [debounceTimer, setDebounceTimer] = useState(null);
-
-  const dependencyList = useMemo(
-    () => [callback, delay, debounceTimer, ...deps],
-    [callback, delay, debounceTimer, deps]
-  );
+export const useDebouncedCallback = (callback, delay = 300) => {
+  const timerRef = useRef();
 
   const debouncedCallback = useCallback((...args) => {
-    if (debounceTimer) {
-      clearTimeout(debounceTimer);
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
     }
 
-    const newTimer = setTimeout(() => {
+    timerRef.current = setTimeout(() => {
       callback(...args);
     }, delay);
-
-    setDebounceTimer(newTimer);
-  }, dependencyList);
+  }, [callback, delay]);
 
   useEffect(() => {
     return () => {
-      if (debounceTimer) {
-        clearTimeout(debounceTimer);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
       }
     };
-  }, [debounceTimer]);
+  }, []);
 
   return debouncedCallback;
 };
