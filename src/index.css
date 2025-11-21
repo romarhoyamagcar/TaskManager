@@ -95,7 +95,7 @@
            shadow-lg
            transition-all duration-300
            focus:outline-none focus:ring-4 focus:ring-brand-primary focus:ring-opacity-20
-           focus:border-brand-primary focus:shadow-brand focus:-translate-y-px
+           focus:border-brand-primary focus:shadow-brand
            hover:border-brand-primary hover:shadow-md;
     /* Persistent glow effect */
     box-shadow: 
