@@ -6,8 +6,7 @@ import { EyeIcon, EyeSlashIcon, ExclamationTriangleIcon } from '@heroicons/react
 const Login = memo(() => {
   const [formData, setFormData] = useState({
     email: '',
-    password: '',
-    isAdmin: false
+    password: ''
   });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -17,10 +16,10 @@ const Login = memo(() => {
   const navigate = useNavigate();
 
   const handleChange = useCallback((e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: value
     }));
     
     // Clear error when user starts typing
@@ -35,10 +34,10 @@ const Login = memo(() => {
     setLoading(true);
 
     try {
-      const result = login(formData.email, formData.password, formData.isAdmin);
+      const result = login(formData.email, formData.password);
       
       if (result.success) {
-        navigate(formData.isAdmin ? '/admin' : '/dashboard');
+        navigate('/dashboard');
       } else {
         setError(result.error);
       }
@@ -146,23 +145,6 @@ const Login = memo(() => {
                 </div>
               </div>
               
-              <div className="flex items-center">
-                <input
-                  id="isAdmin"
-                  name="isAdmin"
-                  type="checkbox"
-                  className="h-4 w-4 text-brand-primary focus:ring-brand-primary focus:ring-opacity-20 border-border-light rounded transition-colors duration-250"
-                  checked={formData.isAdmin}
-                  onChange={handleChange}
-                  aria-describedby="admin-help"
-                />
-                <label htmlFor="isAdmin" className="ml-3 text-sm text-text-secondary cursor-pointer">
-                  Admin login
-                </label>
-              </div>
-              <p id="admin-help" className="form-help">
-                Only for administrators with elevated privileges
-              </p>
             </div>
             
             <div className="mt-8">
@@ -182,22 +164,14 @@ const Login = memo(() => {
               </button>
             </div>
             
-            <div className="mt-6 p-4 bg-bg-secondary rounded-lg border border-border-light">
-              <p className="text-sm font-medium text-text-primary mb-3">
-                Demo credentials:
-              </p>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-text-secondary">Admin:</span>
-                  <code className="bg-bg-tertiary px-2 py-1 rounded text-text-primary">
-                    admin@gmail.com / admin123
-                  </code>
-                </div>
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-text-secondary">User:</span>
-                  <span className="text-text-primary">Register any account</span>
-                </div>
-              </div>
+            <div className="mt-6 p-4 bg-bg-secondary rounded-lg border border-border-light text-sm text-text-secondary">
+              Need elevated access?{' '}
+              <Link
+                to="/admin/login"
+                className="font-semibold text-brand-primary hover:text-brand-primary-dark transition-colors duration-200"
+              >
+                Visit the admin portal
+              </Link>
             </div>
           </div>
         </form>

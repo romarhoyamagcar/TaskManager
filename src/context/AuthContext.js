@@ -30,28 +30,42 @@ export const AuthProvider = ({ children }) => {
   const normalizeEmail = (value = '') => value.trim().toLowerCase();
   const normalizeString = (value = '') => value.trim();
 
+  const getStoredList = (key) => {
+    try {
+      return JSON.parse(localStorage.getItem(key) || '[]');
+    } catch (error) {
+      console.error(`Failed to parse ${key} from localStorage:`, error);
+      return [];
+    }
+  };
+
+  const saveStoredList = (key, list) => {
+    localStorage.setItem(key, JSON.stringify(list));
+  };
+
   const login = (email, password, admin = false) => {
     // In a real app, this would be an API call
     // For demo, we'll use hardcoded credentials
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const users = getStoredList('users');
+    const admins = getStoredList('admins');
     const normalizedEmail = normalizeEmail(email || '');
     const normalizedPassword = normalizeString(password || '');
     
     if (admin) {
-      // Admin login (hardcoded for demo)
-      if (normalizedEmail === 'admin@gmail.com' && normalizedPassword === 'admin123') {
-        const adminUser = {
-          id: 'admin',
-          email: 'admin@gmail.com',
-          name: 'Administrator',
-          role: 'admin'
-        };
-        setCurrentUser(adminUser);
+      const adminAccount = admins.find(a =>
+        normalizeEmail(a.email || '') === normalizedEmail &&
+        normalizeString(a.password || '') === normalizedPassword
+      );
+
+      if (adminAccount) {
+        const { password, ...adminWithoutPassword } = adminAccount;
+        setCurrentUser(adminWithoutPassword);
         setIsAdmin(true);
-        localStorage.setItem('currentUser', JSON.stringify(adminUser));
+        localStorage.setItem('currentUser', JSON.stringify(adminWithoutPassword));
         localStorage.setItem('isAdmin', 'true');
         return { success: true };
       }
+
       return { success: false, error: 'Invalid admin credentials' };
     } else {
       // User login
@@ -72,13 +86,14 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = (userData) => {
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const users = getStoredList('users');
     const sanitizedUserData = {
       ...userData,
       name: normalizeString(userData.name || ''),
       email: normalizeEmail(userData.email || ''),
       phone: normalizeString(userData.phone || ''),
-      password: normalizeString(userData.password || '')
+      password: normalizeString(userData.password || ''),
+      role: 'user'
     };
     
     // Check if email already exists
@@ -93,7 +108,7 @@ export const AuthProvider = ({ children }) => {
     };
     
     users.push(newUser);
-    localStorage.setItem('users', JSON.stringify(users));
+    saveStoredList('users', users);
     
     // Auto login after registration
     const { password, ...userWithoutPassword } = newUser;
@@ -102,6 +117,39 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('currentUser', JSON.stringify(userWithoutPassword));
     localStorage.setItem('isAdmin', 'false');
     
+    return { success: true };
+  };
+
+  const registerAdmin = (adminData) => {
+    const admins = getStoredList('admins');
+    const sanitizedAdminData = {
+      ...adminData,
+      name: normalizeString(adminData.name || ''),
+      email: normalizeEmail(adminData.email || ''),
+      phone: normalizeString(adminData.phone || ''),
+      password: normalizeString(adminData.password || ''),
+      role: 'admin'
+    };
+
+    if (admins.some(a => normalizeEmail(a.email || '') === sanitizedAdminData.email)) {
+      return { success: false, error: 'Admin email already registered' };
+    }
+
+    const newAdmin = {
+      id: `admin-${Date.now()}`,
+      ...sanitizedAdminData,
+      createdAt: new Date().toISOString()
+    };
+
+    admins.push(newAdmin);
+    saveStoredList('admins', admins);
+
+    const { password, ...adminWithoutPassword } = newAdmin;
+    setCurrentUser(adminWithoutPassword);
+    setIsAdmin(true);
+    localStorage.setItem('currentUser', JSON.stringify(adminWithoutPassword));
+    localStorage.setItem('isAdmin', 'true');
+
     return { success: true };
   };
 
@@ -136,6 +184,7 @@ export const AuthProvider = ({ children }) => {
     loading,
     login,
     register,
+    registerAdmin,
     logout,
     updateProfile
   };
